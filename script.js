@@ -384,7 +384,8 @@ const pokemonIdManager = new PokemonIdManager(getCurrentPokemonId());
 injectPokemonInfo(pokemonIdManager.currentId);
 
 RESULTS.addEventListener('click', () => alert(showResults()));
-SMASH_BUTTON.addEventListener('click', () => {handleClickSmash()});
-PASS_BUTTON.addEventListener('click', () => {handleClickPass()});
-UNDO_BUTTON.addEventListener('click', () => {handleClickUndo()});
+
+SMASH_BUTTON.addEventListener('click', handleClickSmash);
+PASS_BUTTON.addEventListener('click', handleClickPass);
+UNDO_BUTTON.addEventListener('click', handleClickUndo);
 
