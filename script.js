@@ -20,19 +20,19 @@ const RESULTS = document.getElementById("results");
  * Pokeball sound
  * @type {Audio}
  */
-const CAPTURED_SOUND = new Audio("pokeball_sound.mp3");
+const CAPTURED_SOUND = new Audio("assets/sounds/pokeball_sound.mp3");
 
 /**
  * Pass sound
  * @type {Audio}
  */
-const REJECT_SOUND = new Audio("reject_sound.mp3");
+const REJECT_SOUND = new Audio("assets/sounds/reject_sound.mp3");
 
 /**
  * Undo sound
  * @type {Audio}
  */
-const UNDO_SOUND = new Audio("undo_sound.mp3");
+const UNDO_SOUND = new Audio("assets/sounds/undo_sound.mp3");
 
 /**
  * HTML smash element

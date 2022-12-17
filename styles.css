@@ -57,7 +57,7 @@ h1 {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(smashorpasshorizontal.png);
+    background-image: url(assets/images/smashorpasshorizontal.png);
 }
 
 img {
@@ -75,7 +75,7 @@ img {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(restart.png);
+    background-image: url(assets/images/restart.png);
 
 }
 
@@ -93,7 +93,7 @@ img {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(rejected.png);
+    background-image: url(assets/images/rejected.png);
    
 }
 
@@ -110,7 +110,7 @@ img {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(pokeball.png);
+    background-image: url(assets/images/pokeball.png);
     
     
 }
