@@ -14,7 +14,13 @@ const MAIN_CONTAINER = document.getElementById("main");
  * HTML results element
  * @type {HTMLButtonElement}
  */
-const RESULTS = document.getElementById("results");
+const SHOW_RESULTS = document.getElementById("show-results");
+
+/**
+ * HTML results element
+ * @type {HTMLButtonElement}
+ */
+const HIDE_RESULTS = document.getElementById("hide-results");
 
 /**
  * Pokeball sound
@@ -51,6 +57,12 @@ const PASS_BUTTON = document.getElementById("pass");
  * @type {HTMLButtonElement}
  */
 const UNDO_BUTTON = document.getElementById("undo");
+
+/**
+ * HTML results  element
+ * @type {HTMLElement}
+ */
+const RESULTS = document.getElementById("results");
 
 /**
  * Background colors for the card according to type of Pokemon
@@ -163,6 +175,8 @@ async function injectPokemonInfo(id) {
 
       MAIN_CONTAINER.className = changeMainClass(type);
       MAIN_CONTAINER.dataset.id = id;
+
+      injectResults();
 }
 
 /**
@@ -259,7 +273,7 @@ function handleClickPass() {
             injectPokemonInfo(id);
             addItemToCollection("passedPokemon", MAIN_CONTAINER.dataset.id);
             saveLastPokemonId("lastPokemonId", MAIN_CONTAINER.dataset.id);
-            REJECT_SOUND.play();
+            REJECT_SOUND.play();    
       }
 }
 
@@ -363,21 +377,32 @@ function erasePokemonFromStorage() {
 }
 
 /**
- * Shows the results of the game
+ * Inject the results of the game
  * @returns {string}
  */
-function showResults() {
-      let smashedPokemon = getItem("smashedPokemon");
-      let passedPokemon = getItem("passedPokemon");
+function injectResults() {
+      let smashedPokemon = getItem("smashedPokemon").length;
+      let passedPokemon = getItem("passedPokemon").length;
 
-      return `You smashed ${smashedPokemon} and passed ${passedPokemon}`;
+      RESULTS.innerHTML = `You smashed ${smashedPokemon} and passed ${passedPokemon}`;
+}
+
+function showResults(){
+
+    RESULTS.style.display = "block";
+}
+
+function hideResults(){
+
+    RESULTS.style.display = "none";
 }
 
 const pokemonIdManager = new PokemonIdManager(getCurrentPokemonId());
 
 injectPokemonInfo(pokemonIdManager.currentId);
 
-RESULTS.addEventListener("click", () => alert(showResults()));
+SHOW_RESULTS.addEventListener("click", showResults);
+HIDE_RESULTS.addEventListener("click", hideResults);
 
 SMASH_BUTTON.addEventListener("click", handleClickSmash);
 PASS_BUTTON.addEventListener("click", handleClickPass);

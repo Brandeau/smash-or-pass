@@ -158,6 +158,56 @@ button {
     height: 50px;
 }
 
+#results-buttons{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#show-results{
+    background-color: rgb(237, 85, 100);
+    color: white;
+    font-size: 15px;
+    width: 50%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 2px;
+}
+
+#show-results:hover{
+    background-color: rgb(217, 77, 91);
+}
+#show-results:active{
+    font-size: 14px;
+}
+
+#hide-results{
+    background-color: rgb(230, 233, 237);
+    color: black;
+    width: 50%;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 2px;
+}
+
+#hide-results:hover{
+    background-color: rgb(208, 208, 208);
+}
+
+#hide-results:active{
+    font-size: 14px;
+}
+
+#results{
+
+    background-color: hsl(208, 50%, 95%);
+    color: black;
+    display: none;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 5px;
+}
+
 .grass-class{
 
     background-color: #7ac74c;
