@@ -305,7 +305,7 @@ function setItem(key, value) {
  * @returns {array}
  */
 function getItem(key) {
-      return JSON.parse(localStorage.getItem(key)) || [];
+      return JSON.parse(localStorage.getItem(key));
 }
 
 /**
