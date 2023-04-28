@@ -209,6 +209,14 @@ button {
     margin-left: 2px;
 }
 
+#restart:hover{
+    background-color: rgb(208, 208, 208);
+}
+
+#restart:active{
+    font-size: 14px;
+}
+
 #results{
 
     background-color: hsl(208, 50%, 95%);

@@ -23,6 +23,12 @@ const SHOW_RESULTS = document.getElementById("show-results");
 const HIDE_RESULTS = document.getElementById("hide-results");
 
 /**
+ * HTML results element
+ * @type {HTMLButtonElement}
+ */
+const RESTART_BUTTON = document.getElementById("restart");
+
+/**
  * Pokeball sound
  * @type {Audio}
  */
@@ -376,6 +382,17 @@ function erasePokemonFromStorage() {
       saveLastPokemonId("lastPokemonId", lastPokemonId);
 }
 
+function restartGame(){
+
+    let message = "If you restart the game, you'll lose all your progress. Do you really want to restart the game?"
+
+    if(confirm(message) === true){
+
+        localStorage.clear();
+        injectPokemonInfo(1);
+    }
+}
+
 /**
  * Inject the results of the game
  * @returns {string}
@@ -412,3 +429,5 @@ HIDE_RESULTS.addEventListener("click", hideResults);
 SMASH_BUTTON.addEventListener("click", handleClickSmash);
 PASS_BUTTON.addEventListener("click", handleClickPass);
 UNDO_BUTTON.addEventListener("click", handleClickUndo);
+
+RESTART_BUTTON.addEventListener("click", restartGame)
