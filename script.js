@@ -384,17 +384,22 @@ function injectResults() {
       let smashedPokemon = getItem("smashedPokemon").length;
       let passedPokemon = getItem("passedPokemon").length;
 
-      RESULTS.innerHTML = `You smashed ${smashedPokemon} and passed ${passedPokemon}`;
+      RESULTS.innerHTML = `You smashed ${smashedPokemon} and passed ${passedPokemon} Pokémon`;
 }
 
 function showResults(){
 
     RESULTS.style.display = "block";
+    SHOW_RESULTS.style.display = "none";
+    HIDE_RESULTS.style.display = "block";
+
 }
 
 function hideResults(){
 
     RESULTS.style.display = "none";
+    HIDE_RESULTS.style.display = "none";
+    SHOW_RESULTS.style.display = "block";
 }
 
 const pokemonIdManager = new PokemonIdManager(getCurrentPokemonId());
