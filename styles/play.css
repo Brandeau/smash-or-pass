@@ -57,7 +57,7 @@ h1 {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(assets/images/smashorpasshorizontal.png);
+    background-image: url(../assets/images/smashorpasshorizontal.png);
 }
 
 img {
@@ -75,7 +75,7 @@ img {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(assets/images/restart.png);
+    background-image: url(../assets/images/restart.png);
 
 }
 
@@ -93,7 +93,7 @@ img {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(assets/images/rejected.png);
+    background-image: url(../assets/images/rejected.png);
    
 }
 
@@ -110,7 +110,7 @@ img {
     height: 50px;
     background-size: cover;
     display: inline-flex;
-    background-image: url(assets/images/pokeball.png);
+    background-image: url(../assets/images/pokeball.png);
     
     
 }
@@ -174,7 +174,7 @@ button {
 }
 
 #show-results:hover{
-    background-color: rgb(217, 77, 91);
+    background-color: rgb(243, 49, 68);
 }
 #show-results:active{
     font-size: 14px;
@@ -192,7 +192,7 @@ button {
 }
 
 #hide-results:hover{
-    background-color: rgb(208, 208, 208);
+    background-color: rgb(255, 252, 252);
 }
 
 #hide-results:active{
@@ -210,7 +210,7 @@ button {
 }
 
 #restart:hover{
-    background-color: rgb(208, 208, 208);
+    background-color: rgb(255, 252, 252);
 }
 
 #restart:active{
