@@ -122,6 +122,23 @@ function getMoves(movesArray) {
 }
 
 /**
+ * Gets Pokemon types
+ * @param {array} typesArray
+ * @returns {string}
+ */
+function getTypes(typesArray) {
+    if (typesArray.length === 1) {
+          return `${typesArray[0].type.name}`;
+    } else if (typesArray.length === 2) {
+          return `${typesArray[0].type.name}, ${typesArray[1].type.name}`;
+    } else if (typesArray.length === 0) {
+          return;
+    }
+
+    return `${typesArray[0].type.name}, ${typesArray[1].type.name}`;
+}
+
+/**
  * Gets Pokemon image
  * @param {array} sprites
  * @returns {HTMLImageElement}
@@ -172,7 +189,8 @@ function changeMainClass(pokemonType) {
 async function injectPokemonInfo(id) {
       const data = await getPokemon(id);
       const moves = getMoves(data.moves);
-      const type = data["types"][0]["type"]["name"];
+      //const type = data["types"][0]["type"]["name"];
+      const type = getTypes(data.types);
       const name = data["name"].toUpperCase();
 
       document.getElementById("name-and-type").textContent = `${name}, ${type}`;
@@ -253,6 +271,10 @@ class PokemonIdManager {
             this.currentId -= subtrahend;
 
             return this.currentId;
+      }
+
+      restartId(){
+        this.currentId = this.FIRST;
       }
 }
 
@@ -389,7 +411,8 @@ function restartGame(){
     if(confirm(message) === true){
 
         localStorage.clear();
-        injectPokemonInfo(1);
+        pokemonIdManager.restartId();
+        injectPokemonInfo(pokemonIdManager.FIRST);
     }
 }
 
