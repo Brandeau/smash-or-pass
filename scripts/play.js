@@ -127,15 +127,15 @@ function getMoves(movesArray) {
  * @returns {string}
  */
 function getTypes(typesArray) {
-    if (typesArray.length === 1) {
-          return `${typesArray[0].type.name}`;
-    } else if (typesArray.length === 2) {
-          return `${typesArray[0].type.name}, ${typesArray[1].type.name}`;
-    } else if (typesArray.length === 0) {
-          return;
-    }
+      if (typesArray.length === 1) {
+            return `${typesArray[0].type.name}`;
+      } else if (typesArray.length === 2) {
+            return `${typesArray[0].type.name}, ${typesArray[1].type.name}`;
+      } else if (typesArray.length === 0) {
+            return;
+      }
 
-    return `${typesArray[0].type.name}, ${typesArray[1].type.name}`;
+      return `${typesArray[0].type.name}, ${typesArray[1].type.name}`;
 }
 
 /**
@@ -189,16 +189,19 @@ function changeMainClass(pokemonType) {
 async function injectPokemonInfo(id) {
       const data = await getPokemon(id);
       const moves = getMoves(data.moves);
-      //const type = data["types"][0]["type"]["name"];
       const type = getTypes(data.types);
       const name = data["name"].toUpperCase();
+      const types = data.types.map((item) => item.type?.name);
 
-      document.getElementById("name-and-type").textContent = `${name}, ${type}`;
+      document.getElementById("name").textContent = `${name}`;
+      document.getElementById("types").textContent = `${type}`;
+
       document.getElementById("pokemon-image").src = getImage(data.sprites);
       document.getElementById("moveset").textContent = moves;
 
-      MAIN_CONTAINER.className = changeMainClass(type);
+      MAIN_CONTAINER.className = changeMainClass(types[0]);
       MAIN_CONTAINER.dataset.id = id;
+      MAIN_CONTAINER.dataset.types = types;
 
       injectResults();
 }
@@ -273,10 +276,60 @@ class PokemonIdManager {
             return this.currentId;
       }
 
-      restartId(){
-        this.currentId = this.FIRST;
+      restartId() {
+            this.currentId = this.FIRST;
       }
 }
+
+const Counter = Object.freeze({
+      /**
+       * @param {string} key
+       *
+       * @returns {number}
+       */
+      retrieve(key) {
+            const retrieved = JSON.parse(localStorage.getItem(key));
+
+            if (retrieved === null) {
+                  return 0;
+            }
+
+            return retrieved;
+      },
+      /**
+       * @param {string} key
+       * @param {number} quantity
+       */
+      submit(key, quantity) {
+            return localStorage.setItem(key, JSON.stringify(quantity));
+      },
+      /**
+       * @param {"smashed" | "passed"} appraisal
+       * @param {string} type
+       *
+       * @returns {void}
+       */
+      increase(appraisal, type) {
+            const key = `counter:${appraisal}:${type}`;
+            const currentValue = this.retrieve(key);
+
+            return this.submit(key, currentValue + 1);
+      },
+      /**
+       * @param {"smashed" | "passed"} appraisal
+       * @param {string} type
+       *
+       * @returns {void}
+       */
+      decrease(appraisal, type) {
+            const key = `counter:${appraisal}:${type}`;
+            const currentValue = this.retrieve(key);
+
+            if (currentValue) {
+                  return this.submit(key, currentValue - 1);
+            }
+      },
+});
 
 /**
  * Handles the clicking of the Smash button
@@ -286,8 +339,13 @@ function handleClickSmash() {
 
       if (id) {
             injectPokemonInfo(id);
-            addItemToCollection("smashedPokemon", MAIN_CONTAINER.dataset.id);
+            addItemToCollection("smashedIDs", MAIN_CONTAINER.dataset.id);
+            addToCollectionOfAppraisals("appraisals", "smashed");
             saveLastPokemonId("lastPokemonId", MAIN_CONTAINER.dataset.id);
+            saveCollectionOfTypes("listOfTypes", MAIN_CONTAINER.dataset.types);
+            MAIN_CONTAINER.dataset.types
+                  .split(",")
+                  .forEach((element) => Counter.increase("smashed", element));
             CAPTURED_SOUND.play();
       }
 }
@@ -299,9 +357,14 @@ function handleClickPass() {
       const id = pokemonIdManager.getNext();
       if (id) {
             injectPokemonInfo(id);
-            addItemToCollection("passedPokemon", MAIN_CONTAINER.dataset.id);
+            addItemToCollection("passedIDs", MAIN_CONTAINER.dataset.id);
+            addToCollectionOfAppraisals("appraisals", "passed");
             saveLastPokemonId("lastPokemonId", MAIN_CONTAINER.dataset.id);
-            REJECT_SOUND.play();    
+            saveCollectionOfTypes("listOfTypes", MAIN_CONTAINER.dataset.types);
+            MAIN_CONTAINER.dataset.types
+                  .split(",")
+                  .forEach((element) => Counter.increase("passed", element));
+            REJECT_SOUND.play();
       }
 }
 
@@ -311,8 +374,16 @@ function handleClickPass() {
 function handleClickUndo() {
       const id = pokemonIdManager.getPrevious();
       if (id) {
-            injectPokemonInfo(id);
+            getItem("listOfTypes")
+                  .pop()
+                  .split(',')
+                  .forEach((element) =>
+                        Counter.decrease(getItem("appraisals").pop(), element)
+                  );
+            eraseAppraisalFromAppraisals();
             erasePokemonFromStorage();
+            eraseItemFromListOfTypes();
+            injectPokemonInfo(id);
             UNDO_SOUND.play();
       }
 }
@@ -356,6 +427,18 @@ function addItemToCollection(key, item) {
       }
 }
 
+function addToCollectionOfAppraisals(key, item) {
+      const collection = getItem(key);
+
+      if (Array.isArray(collection)) {
+            collection.push(item);
+
+            return setItem(key, collection);
+      } else {
+            return setItem(key, [item]);
+      }
+}
+
 /**
  * Stores the last pokemon's ID into the local storage
  * @param {string} key
@@ -390,30 +473,57 @@ function getCurrentPokemonId() {
  */
 function erasePokemonFromStorage() {
       let lastPokemonId = getLastPokemonId();
-      let currentSmashedArray = getItem("smashedPokemon");
-      let currentPassedArray = getItem("passedPokemon");
+      let currentSmashedArray = getItem("smashedIDs");
+      let currentPassedArray = getItem("passedIDs");
 
       if (currentSmashedArray.includes(lastPokemonId)) {
             currentSmashedArray.pop();
-            setItem("smashedPokemon", currentSmashedArray);
+            setItem("smashedIDs", currentSmashedArray);
       } else {
             currentPassedArray.pop();
-            setItem("passedPokemon", currentPassedArray);
+            setItem("passedIDs", currentPassedArray);
       }
       lastPokemonId = lastPokemonId > 1 ? lastPokemonId - 1 : 0;
       saveLastPokemonId("lastPokemonId", lastPokemonId);
 }
 
-function restartGame(){
+function eraseAppraisalFromAppraisals() {
+      let lastAppraisal = getItem("appraisals");
 
-    let message = "If you restart the game, you'll lose all your progress. Do you really want to restart the game?"
+      lastAppraisal.pop();
 
-    if(confirm(message) === true){
+      setItem("appraisals", lastAppraisal);
+}
 
-        localStorage.clear();
-        pokemonIdManager.restartId();
-        injectPokemonInfo(pokemonIdManager.FIRST);
-    }
+function eraseItemFromListOfTypes() {
+    let lastTypes = getItem("listOfTypes");
+
+    lastTypes.pop();
+
+    setItem("listOfTypes", lastTypes);
+}
+
+function saveCollectionOfTypes(key, item) {
+      const collection = getItem(key);
+
+      if (Array.isArray(collection)) {
+            collection.push(item);
+
+            return setItem(key, collection);
+      } else {
+            return setItem(key, [item]);
+      }
+}
+
+function restartGame() {
+      let message =
+            "If you restart the game, you'll lose all your progress. Do you really want to restart the game?";
+
+      if (confirm(message) === true) {
+            localStorage.clear();
+            pokemonIdManager.restartId();
+            injectPokemonInfo(pokemonIdManager.FIRST);
+      }
 }
 
 /**
@@ -421,25 +531,22 @@ function restartGame(){
  * @returns {string}
  */
 function injectResults() {
-      let smashedPokemon = getItem("smashedPokemon").length;
-      let passedPokemon = getItem("passedPokemon").length;
+      let smashedIDs = getItem("smashedIDs").length;
+      let passedIDs = getItem("passedIDs").length;
 
-      RESULTS.innerHTML = `You smashed ${smashedPokemon} and passed ${passedPokemon} Pokémon`;
+      RESULTS.innerHTML = `You smashed ${smashedIDs} and passed ${passedIDs} Pokémon`;
 }
 
-function showResults(){
-
-    RESULTS.style.display = "block";
-    SHOW_RESULTS.style.display = "none";
-    HIDE_RESULTS.style.display = "block";
-
+function showResults() {
+      RESULTS.style.display = "block";
+      SHOW_RESULTS.style.display = "none";
+      HIDE_RESULTS.style.display = "block";
 }
 
-function hideResults(){
-
-    RESULTS.style.display = "none";
-    HIDE_RESULTS.style.display = "none";
-    SHOW_RESULTS.style.display = "block";
+function hideResults() {
+      RESULTS.style.display = "none";
+      HIDE_RESULTS.style.display = "none";
+      SHOW_RESULTS.style.display = "block";
 }
 
 const pokemonIdManager = new PokemonIdManager(getCurrentPokemonId());
@@ -453,4 +560,4 @@ SMASH_BUTTON.addEventListener("click", handleClickSmash);
 PASS_BUTTON.addEventListener("click", handleClickPass);
 UNDO_BUTTON.addEventListener("click", handleClickUndo);
 
-RESTART_BUTTON.addEventListener("click", restartGame)
+RESTART_BUTTON.addEventListener("click", restartGame);

@@ -146,7 +146,7 @@ button {
     color: white;
 }
 
-#name-and-type{
+#name, #types{
 
     font-family: 'Puritan', sans-serif;
     font-weight: bold;
