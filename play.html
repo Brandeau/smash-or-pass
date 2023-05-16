@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Puritan:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Kenia&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/1d3c62beb7.js" crossorigin="anonymous"></script>
-    <title>Smash or Pass</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>    <title>Smash or Pass</title>
 </head>
 <body>
     <main id="main" data-id="0">
@@ -37,7 +37,15 @@
             <button type="button" id="hide-results">Hide results</button>
             <button type="button" id="restart">Restart</button>
         </section>
-        <p id="results"></p>
+        <section id="resultsSection">
+            <p id="results"></p>
+            <canvas id="smashedChart" width="300" height="300"></canvas>
+            <p id="detailedResults">Smashed Pokemon By Type</p>
+            <canvas id="passedChart" width="300" height="300"></canvas>
+            <p id="detailedResults">Passed Pokemon By Type</p>
+
+
+        </section>
     </section>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     <script src="scripts/play.js"></script>

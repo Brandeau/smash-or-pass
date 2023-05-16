@@ -65,10 +65,16 @@ const PASS_BUTTON = document.getElementById("pass");
 const UNDO_BUTTON = document.getElementById("undo");
 
 /**
+ * HTML resultsSection  element
+ * @type {HTMLElement}
+ */
+const RESULTS = document.getElementById("resultsSection");
+
+/**
  * HTML results  element
  * @type {HTMLElement}
  */
-const RESULTS = document.getElementById("results");
+const SIMPLE_RESULTS = document.getElementById("results");
 
 /**
  * Background colors for the card according to type of Pokemon
@@ -204,6 +210,10 @@ async function injectPokemonInfo(id) {
       MAIN_CONTAINER.dataset.types = types;
 
       injectResults();
+      updateChartData(smashedChart, "smashed");
+      updateChartData(passedChart, "passed");
+
+
 }
 
 /**
@@ -347,6 +357,8 @@ function handleClickSmash() {
                   .split(",")
                   .forEach((element) => Counter.increase("smashed", element));
             CAPTURED_SOUND.play();
+
+
       }
 }
 
@@ -365,6 +377,8 @@ function handleClickPass() {
                   .split(",")
                   .forEach((element) => Counter.increase("passed", element));
             REJECT_SOUND.play();
+
+
       }
 }
 
@@ -534,7 +548,138 @@ function injectResults() {
       let smashedIDs = getItem("smashedIDs").length;
       let passedIDs = getItem("passedIDs").length;
 
-      RESULTS.innerHTML = `You smashed ${smashedIDs} and passed ${passedIDs} Pokémon`;
+      SIMPLE_RESULTS.innerHTML = `You smashed ${smashedIDs} and passed ${passedIDs} Pokémon`;
+
+}
+
+/**
+ * HTML canvas element
+ * @type {HTMLElement}
+ */
+let smashedChartContext = document.getElementById("smashedChart").getContext("2d");
+
+let smashedChart = new Chart(smashedChartContext,{
+    type: "pie",
+    data:{
+        labels:["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"],
+        datasets:[{
+            label: "smashed Pokemon",
+            data:[getItem("counter:smashed:normal"), 
+                getItem("counter:smashed:fire"), 
+                getItem("counter:smashed:water"),
+                getItem("counter:smashed:electric"),
+                getItem("counter:smashed:grass"),
+                getItem("counter:smashed:ice"),
+                getItem("counter:smashed:fighting"),
+                getItem("counter:smashed:poison"),
+                getItem("counter:smashed:ground"),
+                getItem("counter:smashed:flying"),
+                getItem("counter:smashed:psychic"),
+                getItem("counter:smashed:bug"),
+                getItem("counter:smashed:rock"),
+                getItem("counter:smashed:ghost"),
+                getItem("counter:smashed:dragon"),
+                getItem("counter:smashed:dark"),
+                getItem("counter:smashed:steel"),
+                getItem("counter:smashed:fairy")],
+            backgroundColor:[
+                "#A8A77A",
+                "#EE8130",
+                "#6390F0",
+                "#F7D02C",
+                "#7AC74C",
+                "#96D9D6",
+                "#C22E28",
+                "#A33EA1",
+                "#E2BFC5",
+                "#A98FF3",
+                "#F95587",
+                "#A6B91A",
+                "#B6A136",
+                "#735797",
+                "#6F35FC",
+                "#705746",
+                "#B7B7CE",
+                "#D685AD"
+               
+            ],
+        }]
+    }
+});
+
+let passedChartContext = document.getElementById("passedChart").getContext("2d");
+
+
+let passedChart = new Chart(passedChartContext,{
+    type: "pie",
+    data:{
+        labels:["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"],
+        datasets:[{
+            label: "passed Pokemon",
+            data:[getItem("counter:passed:normal"), 
+                getItem("counter:passed:fire"), 
+                getItem("counter:passed:water"),
+                getItem("counter:passed:electric"),
+                getItem("counter:passed:grass"),
+                getItem("counter:passed:ice"),
+                getItem("counter:passed:fighting"),
+                getItem("counter:passed:poison"),
+                getItem("counter:passed:ground"),
+                getItem("counter:passed:flying"),
+                getItem("counter:passed:psychic"),
+                getItem("counter:passed:bug"),
+                getItem("counter:passed:rock"),
+                getItem("counter:passed:ghost"),
+                getItem("counter:passed:dragon"),
+                getItem("counter:passed:dark"),
+                getItem("counter:passed:steel"),
+                getItem("counter:passed:fairy")],
+            backgroundColor:[
+                "#A8A77A",
+                "#EE8130",
+                "#6390F0",
+                "#F7D02C",
+                "#7AC74C",
+                "#96D9D6",
+                "#C22E28",
+                "#A33EA1",
+                "#E2BFC5",
+                "#A98FF3",
+                "#F95587",
+                "#A6B91A",
+                "#B6A136",
+                "#735797",
+                "#6F35FC",
+                "#705746",
+                "#B7B7CE",
+                "#D685AD"
+               
+            ]
+        }]
+    }
+});
+
+function updateChartData(chart, appraisal) {
+    
+    chart.data.datasets[0].data = [getItem(`counter:${appraisal}:normal`), 
+    getItem(`counter:${appraisal}:fire`), 
+    getItem(`counter:${appraisal}:water`),
+    getItem(`counter:${appraisal}:electric`),
+    getItem(`counter:${appraisal}:grass`),
+    getItem(`counter:${appraisal}:ice`),
+    getItem(`counter:${appraisal}:fighting`),
+    getItem(`counter:${appraisal}:poison`),
+    getItem(`counter:${appraisal}:ground`),
+    getItem(`counter:${appraisal}:flying`),
+    getItem(`counter:${appraisal}:psychic`),
+    getItem(`counter:${appraisal}:bug`),
+    getItem(`counter:${appraisal}:rock`),
+    getItem(`counter:${appraisal}:ghost`),
+    getItem(`counter:${appraisal}:dragon`),
+    getItem(`counter:${appraisal}:dark`),
+    getItem(`counter:${appraisal}:steel`),
+    getItem(`counter:${appraisal}:fairy`)];
+    chart.update();
 }
 
 function showResults() {
