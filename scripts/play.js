@@ -233,8 +233,7 @@ class PokemonIdManager {
        *
        * @constant
        */
-      //LAST = 10249;
-      LAST = 10;
+      LAST = 10249;
       /**
        * @constant
        */

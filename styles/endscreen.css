@@ -59,16 +59,25 @@ h1 {
 
 #play-button-container{
     text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #play-button{
     background-color: rgb(237, 85, 100);
     color: white;
-    font-size: 30px;
+    font-size: 20px;
     width: 50%;
     padding: 10px;
+    margin: 10px;
     border-radius: 10px;
-    margin-right: 2px;
     font-family: 'Puritan', sans-serif;
     font-weight: bold;
+}
+
+#print-button{
+    background-color: white;
+    color:rgb(237, 85, 100)
 }
