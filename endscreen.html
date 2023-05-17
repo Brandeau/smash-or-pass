@@ -18,18 +18,15 @@
         <header>
             <h1></h1>
         </header>
-        <section id="instructions">
-            <div>
-                <img src="assets/images/pokeball.png" id="smash-icon" alt="smash"> 
-                <p>Adds the Pokémon to the list of your smashed Pokémon.</p>
-                <img src="assets/images/rejected.png" id="pass-icon" alt="pass"> 
-                <p>Adds the Pokémon to the list of your passed Pokémon.</p>
-                <img src="assets/images/restart.png" id="undo-icon" alt="undo">
-                <p>Undoes the previous selection.</p>
-            </div>
+        <section id="resultsSection">
+            <p id="results"></p>
+            <canvas id="smashedChart" width="300" height="300"></canvas>
+            <p id="detailedResults">Smashed Pokemon By Type</p>
+            <canvas id="passedChart" width="300" height="300"></canvas>
+            <p id="detailedResults">Passed Pokemon By Type</p>
         </section>
         <section id="play-button-container">
-            <button type="button" id="play-button" onclick="location.href='play.html'">PLAY</button>
+            <button type="button" id="play-button" onclick="playAgain()">PLAY AGAIN</button>
     </main>
     <script src="scripts/play.js"></script>
 </body>

@@ -209,9 +209,11 @@ async function injectPokemonInfo(id) {
       MAIN_CONTAINER.dataset.id = id;
       MAIN_CONTAINER.dataset.types = types;
 
-      injectResults();
       updateChartData(smashedChart, "smashed");
       updateChartData(passedChart, "passed");
+
+      injectResults();
+      
 
 
 }
@@ -231,7 +233,8 @@ class PokemonIdManager {
        *
        * @constant
        */
-      LAST = 10249;
+      //LAST = 10249;
+      LAST = 10;
       /**
        * @constant
        */
@@ -347,6 +350,8 @@ const Counter = Object.freeze({
 function handleClickSmash() {
       const id = pokemonIdManager.getNext();
 
+      
+
       if (id) {
             injectPokemonInfo(id);
             addItemToCollection("smashedIDs", MAIN_CONTAINER.dataset.id);
@@ -358,8 +363,20 @@ function handleClickSmash() {
                   .forEach((element) => Counter.increase("smashed", element));
             CAPTURED_SOUND.play();
 
-
       }
+
+      if(id === null){
+        addItemToCollection("smashedIDs", MAIN_CONTAINER.dataset.id);
+            addToCollectionOfAppraisals("appraisals", "smashed");
+            saveLastPokemonId("lastPokemonId", MAIN_CONTAINER.dataset.id);
+            saveCollectionOfTypes("listOfTypes", MAIN_CONTAINER.dataset.types);
+            MAIN_CONTAINER.dataset.types
+                  .split(",")
+                  .forEach((element) => Counter.increase("smashed", element));
+            CAPTURED_SOUND.play();
+        loadEndScreen();
+      }
+
 }
 
 /**
@@ -367,7 +384,9 @@ function handleClickSmash() {
  */
 function handleClickPass() {
       const id = pokemonIdManager.getNext();
+      
       if (id) {
+        
             injectPokemonInfo(id);
             addItemToCollection("passedIDs", MAIN_CONTAINER.dataset.id);
             addToCollectionOfAppraisals("appraisals", "passed");
@@ -380,6 +399,19 @@ function handleClickPass() {
 
 
       }
+
+      if(id === null){
+        addItemToCollection("passedIDs", MAIN_CONTAINER.dataset.id);
+            addToCollectionOfAppraisals("appraisals", "passed");
+            saveLastPokemonId("lastPokemonId", MAIN_CONTAINER.dataset.id);
+            saveCollectionOfTypes("listOfTypes", MAIN_CONTAINER.dataset.types);
+            MAIN_CONTAINER.dataset.types
+                  .split(",")
+                  .forEach((element) => Counter.increase("passed", element));
+            REJECT_SOUND.play();
+        loadEndScreen();
+      }
+
 }
 
 /**
@@ -540,6 +572,14 @@ function restartGame() {
       }
 }
 
+function playAgain(){
+
+    window.location.href = "play.html";
+    localStorage.clear();
+    pokemonIdManager.restartId();
+    injectPokemonInfo(pokemonIdManager.FIRST);
+}
+
 /**
  * Inject the results of the game
  * @returns {string}
@@ -692,6 +732,28 @@ function hideResults() {
       RESULTS.style.display = "none";
       HIDE_RESULTS.style.display = "none";
       SHOW_RESULTS.style.display = "block";
+}
+
+function loadEndScreen(){
+
+    let message =
+            "This is the last Pokémon. Are you sure of your choice? You won't be able to go back after this.";
+
+      if (confirm(message) === true) {
+            window.location.href = "endscreen.html";
+      }else{
+        getItem("listOfTypes")
+                  .pop()
+                  .split(',')
+                  .forEach((element) =>
+                        Counter.decrease(getItem("appraisals").pop(), element)
+                  );
+            eraseAppraisalFromAppraisals();
+            erasePokemonFromStorage();
+            eraseItemFromListOfTypes();
+  }
+
+      
 }
 
 const pokemonIdManager = new PokemonIdManager(getCurrentPokemonId());
